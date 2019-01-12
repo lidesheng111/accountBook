@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/note/main",
+    "pages/check/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#ecf0f3",
+    "navigationBarTitleText": "用哪儿呢",
+    "navigationBarTextStyle": "black"
+  }
+}
