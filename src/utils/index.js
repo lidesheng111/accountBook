@@ -18,7 +18,15 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+const warn = function(text) {
+  wx.showToast({
+    title: text,
+    icon: 'none'
+  })
+}
+
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  warn
 }

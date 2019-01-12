@@ -24,6 +24,7 @@
 
 <script>
 import store from '../../store/store';
+import utils from '../../utils/index';
 
 export default {
   data: {
@@ -64,35 +65,27 @@ export default {
     showingBox: 1,
     item: '',
     date: "0000-00-00",
-    warn: ''
   },
 
   methods: {
     getItem(index) {
-      console.log(index);
       this.item = this.inItems[index];
-      console.log(this.item);
     },
 
     onDate(e) {
-      console.log(e);
       this.date = e.mp.detail.value;
     },
 
     onSubmit(e) {
-      console.log(e);
-      let data = e.mp.value;
+      let data = e.mp.detail.value;
       if (this.item.length == 0) {
-          this.warn = '请选择分类';
-          wx.showToast({
-              title: '00'
-          })
-      } else if (date.details.length == 0) {
-          this.warn = '账务备注不能为空';
+        utils.warn('请选择分类');
+      } else if (data.details.length == 0) {
+        utils.warn('账务备注不能为空');
       } else if (data.price == 0) {
-          this.warn = '金额不能为空';
+        utils.warn('金额不能为空');
       } else if (this.date == '0000-00-00') {
-          this.warn = '请选择日期';
+        utils.warn('请选择日期');
       } else {
           const db = wx.cloud.database();
           db.collection('moneyInOut').add({
