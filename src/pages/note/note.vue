@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <p class="book-name">当前账本：{{bookName}}</p>
     <span class="in-box box" :class="{active: showingBox == 1}" @click="showingBox = 1">钱出</span>
     <span class="out-box box" :class="{active: showingBox == 2}" @click="showingBox = 2">钱进</span>
     <div class="in-items items-box" v-if="showingBox == 1">
@@ -65,6 +66,12 @@ export default {
     showingBox: 1,
     item: '',
     date: "0000-00-00",
+    bookName: '',
+  },
+
+  onLoad(options) {
+    console.log(options);
+    this.bookName = options.bookName;
   },
 
   methods: {
@@ -87,14 +94,20 @@ export default {
       } else if (this.date == '0000-00-00') {
         utils.warn('请选择日期');
       } else {
-          const db = wx.cloud.database();
-          db.collection('moneyInOut').add({
+          utils.db.collection('moneyInOut').add({
             data: {
                 itemName: this.item, 
-                details: e.mp.detail.detils, 
+                details: e.mp.detail.value.details, 
                 price: e.mp.detail.value.price, 
-                date: this.date
-            }
+                date: this.date,
+                bookName: this.bookName
+            },
+            success: res => {
+              wx.navigateTo({
+                url: '../check/main'
+              })
+            },
+            fail: err => console.error(err)
           })
       }
     }
@@ -104,6 +117,12 @@ export default {
 
 
 <style>
+.book-name {
+  font-size: 28rpx;
+  font-weight: 100;
+  color: #ffd7a6;
+  text-decoration: underline;
+}
 .box {
   display: inline-block;
   width: 335rpx;

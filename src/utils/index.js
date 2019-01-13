@@ -18,6 +18,8 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+const db = wx.cloud.database();
+
 const warn = function(text) {
   wx.showToast({
     title: text,
@@ -28,5 +30,6 @@ const warn = function(text) {
 export default {
   formatNumber,
   formatTime,
+  db,
   warn
 }

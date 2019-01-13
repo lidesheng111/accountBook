@@ -3,24 +3,43 @@
         <img class="bg" src="/static/images/plants.jpg" mode="widthFix"/>
         <img class="wood1 wood" src="/static/images/wood-s.png" mode="widthFix" @click="toNote">
         <img class="wood2 wood" src="/static/images/wood-s.png" mode="widthFix" @click="toCheck">
-        <div class="notes text" @click="toNote">记账</div>
+        <div class="note text" @click="toNote">记账</div>
         <div class="check text" @click="toCheck">查看</div>
+        <div v-if="showing" class="account-select">
+            <p class="account-name" v-for="(item, index) in accountName" :key="item"><i class="fa fa-pencil-square-o" @click="onNavigate(index)">{{item}}</i></p>
+            <i v-if="id==1" class="fa fa-plus">添加</i>
+        </div>
     </div>
 </template>
 
 
 <script>
 export default {
+    data: {
+       accountName: ['M的账本', '出租房', '装修'],
+       showing: false,
+       id: 1,
+    },
+
     methods: {
         toNote() {
-            wx.navigateTo({
-                url: '/pages/note/main'
-            })
+            this.showing = !this.showing;
+            this.id = 1;
         },
         toCheck() {
-            wx.navigateTo({
-                url: '/pages/check/main'
-            })
+            this.showing = !this.showing;
+            this.id = 2;
+        },
+        onNavigate(index) {
+            if (this.id == 1) {
+                wx.navigateTo({
+                    url: '/pages/note/main?bookName=' + this.accountName[index],
+                })
+            } else {
+                wx.navigateTo({
+                    url: '/pages/check/main?bookName=' + this.accountName[index],
+                })
+            }
         }
     }
 }
@@ -55,7 +74,7 @@ export default {
     font-size: 48rpx;
     letter-spacing: 20rpx;
 }
-.notes {
+.note {
     top: 130rpx;
     left: 140rpx;
 }
@@ -64,6 +83,15 @@ export default {
     top: 382rpx;
 }
 
+.account-select {
+    color: #31401c;
+    font-size: 30rpx;
+    font-weight: 100;
+    margin-bottom: 10rpx;
+    position: absolute;
+    top: 100rpx;
+    right: 50rpx;
+}
 </style>
 
 
