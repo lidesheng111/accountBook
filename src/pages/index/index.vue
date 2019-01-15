@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <img class="bg" src="/static/images/plants.jpg" mode="widthFix"/>
+        <img class="bg" src="cloud://test1009.7465-test1009/plants.jpg" mode="widthFix"/>
         <img class="wood1 wood" src="/static/images/wood-s.png" mode="widthFix" @click="toNote">
         <img class="wood2 wood" src="/static/images/wood-s.png" mode="widthFix" @click="toCheck">
         <div class="note text" @click="toNote">记账</div>
@@ -19,16 +19,29 @@ export default {
        accountName: ['M的账本', '出租房', '装修'],
        showing: false,
        id: 1,
+       i: 1
     },
 
     methods: {
         toNote() {
-            this.showing = !this.showing;
-            this.id = 1;
+            if (this.i == 2) {
+                // 说明刚切换过来
+                this.id = 1;
+                this.i = 1;
+            } else if (this.i == 1) {
+                this.showing = !this.showing;
+                this.id = 1;
+            }
         },
         toCheck() {
-            this.showing = !this.showing;
-            this.id = 2;
+            if (this.i==1) {
+                // 说明刚切换过来
+                this.id = 2;
+                this.i = 2;
+            } else if (this.i==2) {
+                this.showing = !this.showing;
+                this.id = 2;
+            }
         },
         onNavigate(index) {
             if (this.id == 1) {
@@ -88,9 +101,14 @@ export default {
     font-size: 30rpx;
     font-weight: 100;
     margin-bottom: 10rpx;
+    /* text-shadow: 0 0 10rpx rgba(0, 0, 0, 0.8); */
     position: absolute;
     top: 100rpx;
     right: 50rpx;
+    background-color: white;
+    padding: 20rpx;
+    border-radius: 20rpx;
+    box-shadow: 2rpx 5rpx 10rpx rgba(0, 0, 0, 0.8)
 }
 </style>
 
