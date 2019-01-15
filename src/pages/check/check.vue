@@ -30,22 +30,19 @@ export default {
 
 
 <style>
-/* .container {
-    margin: 20rpx;
-} */
 .note-items-container {
     display: flex;
-    justify-content: space-between;
-    font-size: 28rpx;
-    background-color: #b8bf55;
+    font-size: 24rpx;
+    /* background-color: #e5e7b6; */
     padding: 0 20rpx;
     height: 80rpx;
     line-height: 80rpx;
     margin: 50rpx 0;
+    color: green;
+    text-align: center;
+    background: linear-gradient(#e5e7b6, #ecf0f3)
 }
-/* .note-items-container p:nth-child(2) {
-    color: #fff;
-} */
+
 .item-name {
     position: relative;
     top: -40rpx;
@@ -53,5 +50,20 @@ export default {
     background-color: #daa677;
     border-radius: 50%;
     border: 8rpx solid #ecf0f3;
+    font-size: 24rpx;
+    padding: 5rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+}
+.date {
+    width: 140rpx;
+}
+.price {
+    width: 100rpx;
+    position: absolute;
+    right: 20rpx;
+}
+.details {
+    width: 374rpx;
 }
 </style>
