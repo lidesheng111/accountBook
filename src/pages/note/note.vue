@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <p class="book-name">当前账本：{{bookName}}</p>
+    <p class="book-name active">当前账本：{{bookName}}</p>
     <span class="in-box box" :class="{active: showingBox == 1}" @click="showingBox = 1">钱出</span>
     <span class="out-box box" :class="{active: showingBox == 2}" @click="showingBox = 2">钱进</span>
     <div class="in-items items-box" v-if="showingBox == 1">
-      <p v-for="(item, index) in inItems" :key="item" @click="getItem(index)">{{item}}</p>
+      <p class="active" v-for="(item, index) in inItems" :key="item" @click="getItem(index)">{{item}}</p>
     </div>
     <div class="out-items items-box" v-if="showingBox == 2">
-      <p v-for="(item, index) in outItems" :key="item" @click="getItem(index)">{{item}}</p>
+      <p v-for="(item, index) in outItems" :key="item" @click="getItem(index)" :class="{active: isActive}" >{{item}}</p>
     </div>
     <form class="from" @submit="onSubmit">
       <input class="details form-item" placeholder-class type="text" name="details" auto-focus="true" placeholder="账务备注">
@@ -67,16 +67,18 @@ export default {
     item: '',
     date: "0000-00-00",
     bookName: '',
+    isActive: true
   },
 
   onLoad(options) {
-    console.log(options);
     this.bookName = options.bookName;
   },
 
   methods: {
     getItem(index) {
+      this.isActive = true;
       this.item = this.inItems[index];
+      console.log('ggg')
     },
 
     onDate(e) {
@@ -136,6 +138,7 @@ export default {
 }
 .active {
     background-color: #daa677;
+    color: #201715;
 }
 
 .items-box p {
@@ -148,10 +151,10 @@ export default {
   font-size: 28rpx;
   padding: 5rpx 10rpx;
 }
-.items-box p:hover {
+/* .items-box p:hover {
   background-color: #daa677;
   color: #201715;
-}
+} */
 .input-placeholder {
   color: #ffd7a6;
   font-size: 24rpx;
