@@ -19,7 +19,7 @@ export default {
           return store.state.accountName;
       },
       index() {
-          return store.state.index
+          return store.state.index;
       }
   },
 
@@ -36,7 +36,8 @@ export default {
 <style>
 picker {
     font-size: 28rpx;
-    color: green;
+    color: rgb(134, 128, 128);
     margin-left: 20rpx;
+    font-weight: 100;
 }
 </style>

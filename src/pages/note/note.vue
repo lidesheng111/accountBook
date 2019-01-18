@@ -1,19 +1,42 @@
 <template>
   <div class="container">
-    <account-name />
+    <account-name/>
     <span class="in-box box" :class="{active: showingBox == 1}" @click="showingBox = 1">钱出</span>
     <span class="out-box box" :class="{active: showingBox == 2}" @click="showingBox = 2">钱进</span>
     <div class="in-items items-box" v-if="showingBox == 1">
-      <p  v-for="(item, index) in inItems" :key="item" @click="getItem(index)" class="selected">{{item}}</p>
+      <p
+        v-for="(item, index) in inItems"
+        :key="item"
+        @click="getItem(index)"
+        class="selected"
+      >{{item}}</p>
     </div>
     <div class="out-items items-box" v-if="showingBox == 2">
-      <p v-for="(item, index) in outItems" :key="item" @click="getItem(index)" :class="{active: isActive}" >{{item}}</p>
+      <p
+        v-for="(item, index) in outItems"
+        :key="item"
+        @click="getItem(index)"
+        :class="{active: isActive}"
+      >{{item}}</p>
     </div>
     <form class="from" @submit="onSubmit">
-      <input class="how form-item" type="text" placeholder=" 途径"  placeholder-class :value="how">
-      <input class="details form-item" placeholder-class type="text" name="details" auto-focus="true" placeholder="账务备注">
+      <input class="how form-item" type="text" placeholder=" 途径" placeholder-class :value="how">
+      <input
+        class="details form-item"
+        placeholder-class
+        type="text"
+        name="details"
+        auto-focus="true"
+        :placeholder="details"
+      >
       <div class="price-date">
-        <input class="price form-item" placeholder-class type="digit" name="price" placeholder="￥0.00">
+        <input
+          class="price form-item"
+          placeholder-class
+          type="digit"
+          name="price"
+          :placeholder="price"
+        >
         <picker class="picker form-item" mode="date" @change="onDate">
           <view class="date">日期: {{date}}</view>
         </picker>
@@ -25,12 +48,12 @@
 
 
 <script>
-import store from '../../store/store';
-import utils from '../../utils/index';
-import AccountName from '../../components/accountName';
+import store from "../../store/store";
+import utils from "../../utils/index";
+import AccountName from "../../components/accountName";
 
 export default {
-  components: {AccountName},
+  components: { AccountName },
   data: {
     inItems: [
       "喂肚子",
@@ -66,19 +89,47 @@ export default {
       "其它进账"
     ],
     showingBox: 1,
-    item: '',
+    item: "",
     date: "0000-00-00",
-    bookName: '',
-    how: ''
+    bookName: "",
+    how: "",
+    details: "备注",
+    price: "￥0.00",
+    _id: "",
+    accountItem: []
   },
 
   onLoad(options) {
     this.bookName = options.bookName;
+    this._id = options._id;
+  },
+
+  mounted() {
+    if (this._id != undefined) {
+      utils.db
+        .collection("moneyInOut")
+        .where({ _id: this._id })
+        .get({
+          success: res => {
+            this.how = res.data[0].itemName;
+            this.details = res.data[0].details;
+            this.price = res.data[0].price;
+            this.date = res.data[0].date;
+          },
+          fail: err => console.error(err)
+        });
+    }
+  },
+
+  computed: {
+    name() {
+      return store.getters.name;
+    }
   },
 
   methods: {
     getItem(index) {
-      this.how = this.item = this.inItems[index]; 
+      this.how = this.item = this.inItems[index];
     },
 
     onDate(e) {
@@ -87,30 +138,51 @@ export default {
 
     onSubmit(e) {
       let data = e.mp.detail.value;
-      if (this.item.length == 0) {
-        utils.warn('请选择分类');
-      } else if (data.details.length == 0) {
-        utils.warn('账务备注不能为空');
-      } else if (data.price == 0) {
-        utils.warn('金额不能为空');
-      } else if (this.date == '0000-00-00') {
-        utils.warn('请选择日期');
-      } else {
-          utils.db.collection('moneyInOut').add({
+      if (this._id != undefined) {
+        utils.db
+          .collection("moneyInOut")
+          .doc(this._id)
+          .update({
             data: {
-                itemName: this.item, 
-                details: e.mp.detail.value.details, 
-                price: e.mp.detail.value.price, 
-                date: this.date,
-                bookName: this.bookName
+              itemName: this.how,
+              details: data.details,
+              price: data.price,
+              date: this.date,
+              bookName: this.name
             },
             success: res => {
               wx.navigateTo({
-                url: '../check/main'
-              })
+                url: "../check/main"
+              });
             },
             fail: err => console.error(err)
-          })
+          });
+      } else {
+        if (this.item.length == 0) {
+          utils.warn("请选择分类");
+        } else if (data.details.length == 0) {
+          utils.warn("账务备注不能为空");
+        } else if (data.price == 0) {
+          utils.warn("金额不能为空");
+        } else if (this.date == "0000-00-00") {
+          utils.warn("请选择日期");
+        } else {
+          utils.db.collection("moneyInOut").add({
+            data: {
+              itemName: this.how,
+              details: data.details,
+              price: data.price,
+              date: this.date,
+              bookName: this.name
+            },
+            success: res => {
+              wx.navigateTo({
+                url: "../check/main"
+              });
+            },
+            fail: err => console.error(err)
+          });
+        }
       }
     }
   }
@@ -137,8 +209,8 @@ export default {
   letter-spacing: 40rpx;
 }
 .active {
-    background-color: #daa677;
-    color: #201715;
+  background-color: #daa677;
+  color: #201715;
 }
 
 .items-box p {
@@ -186,13 +258,13 @@ form .form-item {
 }
 
 .price-date {
-    display: flex;
+  display: flex;
 }
 button {
-    background-color: #ffd7a6;
-    color: #fff;
-    letter-spacing: 40rpx;
-    margin-top: 100rpx;
+  background-color: #ffd7a6;
+  color: #fff;
+  letter-spacing: 40rpx;
+  margin-top: 100rpx;
 }
 </style>
 

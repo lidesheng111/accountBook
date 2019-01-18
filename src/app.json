@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/main",
     "pages/note/main",
-    "pages/check/main"
+    "pages/check/main",
+    "pages/edit/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

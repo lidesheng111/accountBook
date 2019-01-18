@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <account-name />
-        <div class="note-items-container" v-for="item in accountItems" :key="item">
+        <div class="note-items-container" v-for="item in accountItems" :key="item" @click="toEdit(item._id)">
             <p class="item-name">{{item.itemName}}</p>
             <p class="date">{{item.date}}</p>
             <p class="price">￥{{item.price}}</p>
@@ -18,27 +18,30 @@ import AccountName from '../../components/accountName';
 
 export default {
     components: {AccountName},
-    data: {
-        accountItems: '',
-        index: ''
-    },
     computed: {
         accountName() {
-            return store.state.accountName;
+            return store.getters.accountName;
+        },
+        accountItems() {
+            return store.getters.accountItems;
         }
     },
 
-    onLoad(options) {
-        this.index = options.index;
-    },
     mounted() {
         utils.db.collection('moneyInOut').get()
             .then( res => {
-                console.log(res);
-                this.accountItems = res.data
+                store.commit('getAccountItems', res.data)
             })
             .catch( err => console.error(err) )
     },
+
+    methods: {
+        toEdit(_id) {
+            wx.navigateTo({
+                url: '/pages/note/main?_id=' + _id,
+            })
+        }
+    }
 }
 </script>
 
