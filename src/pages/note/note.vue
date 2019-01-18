@@ -1,15 +1,16 @@
 <template>
   <div class="container">
-    <p class="book-name active">当前账本：{{bookName}}</p>
+    <account-name />
     <span class="in-box box" :class="{active: showingBox == 1}" @click="showingBox = 1">钱出</span>
     <span class="out-box box" :class="{active: showingBox == 2}" @click="showingBox = 2">钱进</span>
     <div class="in-items items-box" v-if="showingBox == 1">
-      <p class="active" v-for="(item, index) in inItems" :key="item" @click="getItem(index)">{{item}}</p>
+      <p  v-for="(item, index) in inItems" :key="item" @click="getItem(index)" class="selected">{{item}}</p>
     </div>
     <div class="out-items items-box" v-if="showingBox == 2">
       <p v-for="(item, index) in outItems" :key="item" @click="getItem(index)" :class="{active: isActive}" >{{item}}</p>
     </div>
     <form class="from" @submit="onSubmit">
+      <input class="how form-item" type="text" placeholder=" 途径"  placeholder-class :value="how">
       <input class="details form-item" placeholder-class type="text" name="details" auto-focus="true" placeholder="账务备注">
       <div class="price-date">
         <input class="price form-item" placeholder-class type="digit" name="price" placeholder="￥0.00">
@@ -26,13 +27,14 @@
 <script>
 import store from '../../store/store';
 import utils from '../../utils/index';
+import AccountName from '../../components/accountName';
 
 export default {
+  components: {AccountName},
   data: {
     inItems: [
       "喂肚子",
       "交通",
-      "旅游",
       "通讯费",
       "房租",
       "水电",
@@ -67,7 +69,7 @@ export default {
     item: '',
     date: "0000-00-00",
     bookName: '',
-    isActive: true
+    how: ''
   },
 
   onLoad(options) {
@@ -76,9 +78,7 @@ export default {
 
   methods: {
     getItem(index) {
-      this.isActive = true;
-      this.item = this.inItems[index];
-      console.log('ggg')
+      this.how = this.item = this.inItems[index]; 
     },
 
     onDate(e) {
@@ -151,10 +151,13 @@ export default {
   font-size: 28rpx;
   padding: 5rpx 10rpx;
 }
-/* .items-box p:hover {
+.items-box p:hover {
   background-color: #daa677;
   color: #201715;
-} */
+}
+.selected {
+  color: red;
+}
 .input-placeholder {
   color: #ffd7a6;
   font-size: 24rpx;
@@ -168,12 +171,18 @@ form .form-item {
   height: 56rpx;
   line-height: 56rpx;
   text-align: center;
-  background-color: #e1ffff;
+  background-color: #fff;
+  display: inline-block;
+}
+.how {
+  width: 200rpx;
+}
+.details {
+  width: 460rpx;
 }
 .picker,
 .price {
   width: 330rpx;
-  display: inline-block;
 }
 
 .price-date {

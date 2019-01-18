@@ -14,14 +14,19 @@
 
 
 <script>
+import store from '../../store/store';
 export default {
     data: {
-       accountName: ['M的账本', '出租房', '装修'],
        showing: false,
        id: 1,
        i: 1
     },
 
+    computed: {
+        accountName() {
+            return store.state.accountName;
+        }
+    },
     methods: {
         toNote() {
             if (this.i == 2) {
@@ -49,8 +54,9 @@ export default {
                     url: '/pages/note/main?bookName=' + this.accountName[index],
                 })
             } else {
+                store.commit('changeIndex', index);
                 wx.navigateTo({
-                    url: '/pages/check/main?bookName=' + this.accountName[index],
+                    url: '/pages/check/main?',
                 })
             }
         }
